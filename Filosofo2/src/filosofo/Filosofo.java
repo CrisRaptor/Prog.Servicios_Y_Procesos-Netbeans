@@ -11,10 +11,11 @@ public class Filosofo extends Thread {
     }
 
     public void run() {
-        pensando();     
+        pensando();
         while (true) {
             mesa.cogerTenedores(comensal);
             comiendo();
+            System.out.println("Filosofo " + comensal + " deja de comer");
             mesa.dejarTenedores(comensal);
             pensando();
         }
