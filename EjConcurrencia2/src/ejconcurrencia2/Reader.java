@@ -10,7 +10,8 @@ import java.io.IOException;
  */
 public class Reader extends Thread {
 
-    String file;
+    private String file;
+    private static int totalLines = 0, totalWords = 0, totalChars = 0;
 
     public Reader(String file) {
         this.file = file;
@@ -18,11 +19,28 @@ public class Reader extends Thread {
 
     @Override
     public void run() {
-        System.out.println(file + "\nLineas: " + countLines());
-        System.out.println(file + "\nPalabras: " + countWords());
-        System.out.println(file + "\nLetras: " + countCharacters());
+        int lines = countLines(), words = countWords(), chars = countCharacters();
+        System.out.println(file + "\nLineas: " + lines + "\nPalabras: " + words + "\nLetras: " + chars);
+        addTotals(totalLines, lines);
+        addTotals(totalWords, words);
+        addTotals(totalChars, chars);
+    }
+    
+    private synchronized void addTotals(int total, int value){
+        total += value;
     }
 
+    public static int getTotalLines() {
+        return totalLines;
+    }
+
+    public static int getTotalWords() {
+        return totalWords;
+    }
+
+    public static int getTotalChars() {
+        return totalChars;
+    }
     private int countLines() {
         int lineCount = 0;
         String line;
@@ -41,22 +59,18 @@ public class Reader extends Thread {
 
     private int countWords() {
         int wordCount = 0;
-        String[] words = null;
+        String[] words;
         String line;
         boolean isNull;
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
             line = in.readLine();
             isNull = (line == null);
-            if (!isNull) {
-                words = line.trim().split("\\s+");
-            }
+
             while (!isNull) {
+                words = line.trim().split("\\s+");
                 wordCount += words.length;
                 line = in.readLine();
                 isNull = (line == null);
-                if (!isNull) {
-                    words = line.trim().split("\\s+");
-                }
             }
         } catch (IOException ex) {
             System.out.println("Error: File not found - " + ex.getMessage());
@@ -67,24 +81,19 @@ public class Reader extends Thread {
 
     private int countCharacters() {
         int charCount = 0;
-        String[] words = null;
+        String[] words;
         String line;
         boolean isNull;
         try (BufferedReader in = new BufferedReader(new FileReader(file))) {
             line = in.readLine();
             isNull = (line == null);
-            if (!isNull) {
-                words = line.trim().split("\\s+");
-            }
             while (!isNull) {
+                words = line.trim().split("\\s+");
                 for (String word : words) {
                     charCount += word.toCharArray().length;
                 }
                 line = in.readLine();
                 isNull = (line == null);
-                if (!isNull) {
-                    words = line.trim().split("\\s+");
-                }
             }
         } catch (IOException ex) {
             System.out.println("Error: File not found - " + ex.getMessage());

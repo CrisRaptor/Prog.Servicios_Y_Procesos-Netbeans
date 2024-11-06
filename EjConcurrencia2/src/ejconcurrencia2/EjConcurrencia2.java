@@ -12,10 +12,14 @@ public class EjConcurrencia2 {
     files/ejercicio_sistemas.txt files/plantilla_apuntes.txt files/ejercicio_algoritmos_planificacion.txt
     */
     public static void main(String[] args) {
-        System.out.println(args.length);
+        System.out.println("Archivos: "+args.length);
         for (String arg : args) {
             new Reader(arg).start();
         }
+        Reader r = new Reader("");
+        System.out.println("Total de lineas: "+ r.getTotalLines()
+                +"\nTotal de palabras: "+ r.getTotalLines()
+        +"\nTotal de letras: "+ r.getTotalChars());
     }
     
     
