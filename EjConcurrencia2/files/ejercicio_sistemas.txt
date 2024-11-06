@@ -1,0 +1,49 @@
+﻿2º DAM. Programación Multimedia y de Dispositivos Móviles
+Tema 3. Diseño de la interfaz de usuario
+________________
+
+
+Sistemas de gestión empresarial
+UD 01. Actividades
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1. ACTIVIDAD 01
+¿Que crees que es mejor solución para una empresa "PYME": programar un sistema ERP a medida desde cero o utilizar y modificar un sistema ERP genérico? ¿Y para una empresa grande?
+2. ACTIVIDAD 02
+Del siguiente listado de sistemas ERP, elige 3 de código abierto y 3 privativo, investiga sobre ellos e indica cuál sería más recomendable usar y por qué.
+https://es.wikipedia.org/wiki/Anexo:Paquetes_del_software_ERP
+3. ACTIVIDAD 3
+Investiga sobre CRM y del enlace que se da a continuación, elige 2 y busca información sobre ellos:
+https://en.wikipedia.org/wiki/Comparison_of_CRM_systems
+
+
+
+
+  
+
+Licencia Reconocimiento - No comercial - CompartirIgual (BY-NC-SA): 
+No se permite un uso comercial de la obra
+________________
+
+
+Página  de

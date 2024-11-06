@@ -1,0 +1,178 @@
+﻿Cristian García Chamizo                                                        I.E.S Belén
+________________
+
+
+Algoritmos de Planificación
+Investiga sobre tres algoritmos de planificación. Explícalos y muestra cómo sería la ejecución de tres procesos de distinto tamaño en cada uno de ellos. Compara los resultados de los ejemplos y muestra las ventajas e inconvenientes de cada uno de ellos.
+Algoritmo 1 - Round Robin
+Uno de los algoritmos más antiguos, sencillos y equitativos en el reparto de procesos. 
+Cada proceso tiene asignado un intervalo de tiempo de ejecución, llamado quantum o cuanto. 
+Si el proceso agota su cuantum de tiempo, se bloquea o termina, se elige a otro proceso. 
+
+
+Ejemplo
+
+
+Nombre
+	Duración (en quantums)
+	Inicio
+	Proceso 1 (P1)
+	2q
+	0
+	Proceso 2 (P2)
+	4q
+	0
+	Proceso 3 (P3)
+	3q
+	4
+	
+
+Se mostrará el nombre y entre paréntesis () la duración restante tras finalizar el bloque.
+Ciclo 1
+	Ciclo 2
+	Ciclo 3
+	Ciclo 4
+	Ciclo 5
+	Ciclo 6
+	Ciclo 7
+	Ciclo 8
+	Ciclo 9
+	P1 (1q)
+	P2 (3q)
+	P1 (0q)
+	P2 (2q)
+	P3 (2q)
+	P2 (1q)
+	P3 (1q)
+	P2 (0q)
+	P3 (0q)
+	
+
+Algoritmo 2 - SJF, Short Job First
+Los procesos se ejecutan sin interrupción (no apropiativa). 
+Cada proceso se asigna según su duración de menor a mayor. 
+Este algoritmo minimiza el tiempo de finalización promedio, como puede verse en el siguiente ejemplo:
+
+
+Nombre
+	Duración (en quantums)
+	Inicio
+	Proceso 1 (P1)
+	2q
+	0
+	Proceso 2 (P2)
+	4q
+	0
+	Proceso 3 (P3)
+	3q
+	4
+	
+
+Se mostrará el nombre y entre paréntesis () la duración restante tras finalizar el bloque.
+Ciclo 1
+	Ciclo 2
+	Ciclo 3
+	Ciclo 4
+	Ciclo 5
+	Ciclo 6
+	Ciclo 7
+	Ciclo 8
+	Ciclo 9
+	P1 (1q)
+	P1 (0q)
+	P2 (3q)
+	P2 (2q)
+	P2 (1q)
+	P2 (0q)
+	P3 (2q)
+	P3 (1q)
+	P3 (0q)
+	Aunque P3 se incorpora en el ciclo 4 los procesos no se interrumpen, por lo que sin importar su duración debe esperar a que finalice P2.
+
+
+Algoritmo RR (Round Robin)
+	Algoritmo SJF (Short Job First)
+	P1 finaliza en C3, P2 finaliza en C8 y P3 finaliza en C9
+	P1 finaliza en C2, P2 finaliza en C6 y P3 finaliza en C9
+	Media: 6,66
+	Media: 5,66
+	
+
+Algoritmo 3 - Tasa de Respuesta más Alta (HRN)
+Este algoritmo corrige algunas deficiencias de SJF, particularmente el retraso excesivo de trabajos largos y el favoritismo excesivo para los trabajos cortos. 
+HRN es una planificación sin interrupción (no apropiativa) donde la prioridad de cada proceso se calcula en función de su duración además del tiempo de espera. 
+Este algoritmo puede calcularse con la siguiente fórmula:
+*   Prioridad = (tiempo de espera + duración restante) / duración restante
+Los procesos cortos tendrán preferencia pero los procesos largos que han esperado también tendrán un trato favorable. 
+Nombre
+	Duración (en quantums)
+	Inicio
+	Proceso 1 (P1)
+	2q
+	0
+	Proceso 2 (P2)
+	4q
+	0
+	Proceso 3 (P3)
+	3q
+	4
+	
+
+Se mostrará el nombre y entre paréntesis () la duración restante tras finalizar el bloque.
+Ciclo 1
+	Ciclo 2
+	Ciclo 3
+	Ciclo 4
+	Ciclo 5
+	Ciclo 6
+	Ciclo 7
+	Ciclo 8
+	Ciclo 9
+	P1 (1q)
+	P1 (0q)
+	P2 (3q)
+	P2 (2q)
+	P2 (1q)
+	P2 (0q)
+	P3 (2q)
+	P3 (1q)
+	P3 (0q)
+	Prioridades antes del ciclo:
+P1
+1
+
+
+P2 
+1
+	P1 
+1
+
+
+P2 
+1,25
+	P2 
+1,5
+	P2 
+1
+
+
+P3 
+1
+	P2 
+1
+
+
+P3 
+1,25
+	P2 
+1
+
+
+P3 
+1,5
+	P3 
+1
+	P3 
+1
+	P3 
+1
