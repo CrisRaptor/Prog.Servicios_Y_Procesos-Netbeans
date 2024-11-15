@@ -26,6 +26,7 @@ public class Reader extends Thread {
         addTotals(totalChars, chars);
     }
     
+    
     private synchronized void addTotals(int total, int value){
         total += value;
     }

@@ -1,5 +1,9 @@
 package ejconcurrencia2;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 
 /**
  *
@@ -16,6 +20,12 @@ public class EjConcurrencia2 {
         for (String arg : args) {
             new Reader(arg).start();
         }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(EjConcurrencia2.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
         Reader r = new Reader("");
         System.out.println("Total de lineas: "+ r.getTotalLines()
                 +"\nTotal de palabras: "+ r.getTotalLines()
