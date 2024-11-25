@@ -1,0 +1,7 @@
+Lectura remota de ficheros
+
+Desarrollar una aplicación en Java que permita leer un fichero de texto ubicado en otro ordenador a través de sockets. Los pasos del proceso serán los siguientes:
+- Programa servidor: solicita al usuario el nombre de un fichero incluyendo su ruta completa dentro del sistema de archivos del servidor.
+- Programa cliente: envía el nombre y la ruta del fichero al servidor.
+- Programa servidor: lee el contenido del fichero y se lo envía al cliente.
+- Programa cliente: muestra el contenido por pantalla.
