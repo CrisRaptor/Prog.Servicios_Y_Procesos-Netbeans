@@ -82,8 +82,6 @@ public class SocketTCPClient {
     }
     
     public static void main(String[] args) {
-        Chat chat = new Chat("Client");
-        chat.setVisible(true);
         Scanner kin = new Scanner(System.in);
         SocketTCPClient cliente = new SocketTCPClient("192.168.4.83",49171);//Ej "localhost",49171
         try {

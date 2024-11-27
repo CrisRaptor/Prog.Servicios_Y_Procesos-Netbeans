@@ -93,8 +93,6 @@ public class SocketTCPServer {
     }
       
     public static void main(String[] args) {
-        Chat chat = new Chat("Server");
-        chat.setVisible(true);
         try {
             SocketTCPServer servidor = new SocketTCPServer(49171);
             servidor.start();
