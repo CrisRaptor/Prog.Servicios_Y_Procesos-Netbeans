@@ -91,19 +91,4 @@ public class SocketTCPServer {
         } 
         return archivo;
     }
-      
-    public static void main(String[] args) {
-        try {
-            SocketTCPServer servidor = new SocketTCPServer(49171);
-            servidor.start();
-            servidor.abrirCanalesDeTexto();
-//            servidor.enviarMensajeTexto("Indica la ruta de un fichero del servidor");      
-//            servidor.enviarMensajeTexto(servidor.leerArchivo(servidor.leerMensajeTexto()));   
-//            System.out.println("Archivo enviado.");
-            servidor.cerrarCanalesDeTexto();
-            servidor.stop();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-    } 
 }

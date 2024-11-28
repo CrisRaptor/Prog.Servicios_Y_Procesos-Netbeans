@@ -80,23 +80,4 @@ public class SocketTCPClient {
         dos.writeUTF(mensaje);
         System.out.println("(Cliente) Mensaje enviado.");
     }
-    
-    public static void main(String[] args) {
-        Scanner kin = new Scanner(System.in);
-        SocketTCPClient cliente = new SocketTCPClient("192.168.4.83",49171);//Ej "localhost",49171
-        try {
-            cliente.start();
-            cliente.abrirCanalesDeTexto();
-//            System.out.println("Mensaje del servidor: " + cliente.leerMensajeTexto());
-//            //Ejemplos de ficheros del servidor local: ejercicio.txt, trick.bat, DEPENDENCIAS_MAVEN.txt
-//            cliente.enviarMensajeTexto(kin.nextLine());
-//            System.out.println("Archivo del servidor:\n " + cliente.leerMensajeTexto());
-            cliente.cerrarCanalesDeTexto();
-            cliente.stop();
-        }catch (UnknownHostException e) {
-            e.printStackTrace();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
