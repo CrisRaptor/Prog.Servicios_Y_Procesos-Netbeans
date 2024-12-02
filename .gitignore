@@ -22,3 +22,8 @@
 /T3/FileSockets/build/
 /T3/ChatSockets/nbproject/private/
 /T3/ChatSockets/build/
+/T3/UDPSocket/nbproject/private/
+/T3/SocketUDPClient/build/
+/T3/SocketUDPClient/nbproject/private/
+/T3/SocketUDPServer/build/
+/T3/SocketUDPServer/nbproject/private/
