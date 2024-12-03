@@ -33,11 +33,6 @@ public class SocketUDPServer {
             System.out.println("(Servidor) Cerrado sockets...");
             socket.close();
             System.out.println("(Servidor) Socket cerrado.");
-            
-            
-            
-            
-            
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (IOException e) {
