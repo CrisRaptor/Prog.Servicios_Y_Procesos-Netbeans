@@ -7,6 +7,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class SocketUDPClient {
@@ -27,6 +29,7 @@ public class SocketUDPClient {
             DatagramPacket peticion;
             for (int i = 0; i<10000; i++) {
                 strMensaje = "Mensaje: "+i;
+                Thread.sleep(1);
                 byte[] mensaje = strMensaje.getBytes();
                 peticion = new DatagramPacket(mensaje, mensaje.length,hostServidor, puertoServidor);
                 socketUDP.send(peticion);
@@ -44,6 +47,8 @@ public class SocketUDPClient {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(SocketUDPClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

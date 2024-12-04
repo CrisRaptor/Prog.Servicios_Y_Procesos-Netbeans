@@ -15,14 +15,16 @@ public class SocketUDPServer {
             System.out.println("(Servidor) Creando socket...");
             socket = new DatagramSocket(49171);
             
-            DatagramPacket peticion;
-            DatagramPacket datagramaEntrada;
+            byte[] bufferLectura = new byte[64];
+            String linea = "";
+            DatagramPacket datagramaEntrada = new DatagramPacket(bufferLectura, bufferLectura.length);
+            socket.receive(datagramaEntrada);
             
-            for (int i = 0; i < 10001; i++) {
-                byte[] bufferLectura = new byte[64];
+            while (!linea.equals("FIN")) {
                 datagramaEntrada = new DatagramPacket(bufferLectura, bufferLectura.length);
                 socket.receive(datagramaEntrada);
-                System.out.println(new String(bufferLectura));
+                linea = new String(datagramaEntrada.getData(), 0 ,datagramaEntrada.getLength());
+                System.out.println(linea);
             }
             System.out.println("(Servidor) Cerrado sockets...");
             socket.close();
