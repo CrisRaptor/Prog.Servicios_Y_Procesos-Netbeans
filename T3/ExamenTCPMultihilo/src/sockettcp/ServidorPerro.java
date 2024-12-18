@@ -66,7 +66,7 @@ public class ServidorPerro extends Thread{
     }
     
     public void abrirCanales() throws IOException{
-         input = socket.getInputStream();
+        input = socket.getInputStream();
         output = socket.getOutputStream();
         System.out.println("(Servidor) Canales abiertos...");
      }
