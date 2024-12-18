@@ -34,8 +34,8 @@ public class ServidorPerro extends Thread{
         try {
             abrirCanales();
             abrirCanalesTexto();
-            String recibido = recibirMensajeTexto();
             System.out.println("--- INICIO PETICION ---");
+            String recibido = recibirMensajeTexto();
             while(!recibido.equals("Dame Perro")){
                 recibido = recibirMensajeTexto();
             }
