@@ -4,6 +4,16 @@
  */
 package com.crisgc.apicat;
 
+import com.isyscore.kotlin.swing.component.StretchIcon;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author CrisGC
@@ -26,21 +36,66 @@ public class Ventana extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        Boton_Nuevo_Gato = new javax.swing.JButton();
+        Titulo_Label = new javax.swing.JLabel();
+        PictureLabel = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        Boton_Nuevo_Gato.setText("Nuevo gato");
+        Boton_Nuevo_Gato.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                clic_nuevo_gato(evt);
+            }
+        });
+
+        Titulo_Label.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        Titulo_Label.setText("Generador de Gatos");
+
+        PictureLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Boton_Nuevo_Gato)
+                            .addComponent(Titulo_Label, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(80, 80, 80)
+                        .addComponent(PictureLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Titulo_Label)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(PictureLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(Boton_Nuevo_Gato)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void clic_nuevo_gato(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clic_nuevo_gato
+        BufferedImage imagen = null;
+        StretchIcon icon = null;
+        try {
+            imagen = ImageIO.read(new URL(APICat.CatRequest()[0].getUrl()));
+            icon = new StretchIcon(imagen);
+        } catch (IOException ex) {
+            Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        PictureLabel.setIcon(icon);
+    }//GEN-LAST:event_clic_nuevo_gato
 
     /**
      * @param args the command line arguments
@@ -78,5 +133,8 @@ public class Ventana extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Boton_Nuevo_Gato;
+    private javax.swing.JLabel PictureLabel;
+    private javax.swing.JLabel Titulo_Label;
     // End of variables declaration//GEN-END:variables
 }
