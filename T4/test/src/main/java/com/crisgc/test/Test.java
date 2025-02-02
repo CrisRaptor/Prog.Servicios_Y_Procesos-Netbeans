@@ -1,7 +1,8 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
-package com.crisgc.apicat;
+
+package com.crisgc.test;
 
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -15,10 +16,11 @@ import java.util.Arrays;
  *
  * @author CrisGC
  */
-public class APICat {
+public class Test {
 
-    public static Cat[] CatRequest() {
-        HttpRequest request = HttpRequest.newBuilder()
+    public static void main(String[] args) {
+        System.out.println("");
+         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.thecatapi.com/v1/images/search"))
                 .header("x-api-key", "live_RmaYgkgOBovkDzRYUHklMIL5bqh38JV2FcQBvVqSKvca4rFwy0flDdUJMLMvl3Uy")
                 .method("GET", HttpRequest.BodyPublishers.noBody())
@@ -36,7 +38,6 @@ public class APICat {
         
         Gson gson = new Gson();
         Cat[] cats = gson.fromJson(response.body(), Cat[].class);
-        System.out.println(Arrays.toString(cats));
-        return cats;
+        System.out.println(response.body());
     }
 }
