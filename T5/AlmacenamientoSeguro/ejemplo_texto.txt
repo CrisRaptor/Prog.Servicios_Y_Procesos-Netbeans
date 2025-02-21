@@ -1,0 +1,3 @@
+Crea una aplicación gráfica en Java que reciba como parámetros un fichero y una contraseña, cifre el contenido utilizando AES, almacene el resultado con un nombre de fichero distinto y borre el fichero original. 
+
+Programar también la aplicación que realice la transformación inversa.
