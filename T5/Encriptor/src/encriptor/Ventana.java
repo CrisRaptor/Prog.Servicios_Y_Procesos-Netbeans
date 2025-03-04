@@ -175,6 +175,8 @@ public class Ventana extends javax.swing.JFrame {
             } catch (NoSuchAlgorithmException ex) {
                 Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
+                feedbackLabel.setText("Archivo " + username + " no encontrado.");
+                feedbackLabel.setForeground(Color.RED);
                 Logger.getLogger(Ventana.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
