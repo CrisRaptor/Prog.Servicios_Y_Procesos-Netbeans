@@ -1,7 +1,9 @@
 package firmadigital;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.security.KeyFactory;
 import java.security.KeyPair;
@@ -10,6 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.EncodedKeySpec;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
@@ -19,7 +22,10 @@ public class KeyManager {
             NOMBRE_CLAVE_PRIVADA = "clave_privada",
             EXTENSION_CLAVE = ".key";
 
-    
+    /**
+     * Genera un par de claves
+     * @return claves generadas
+     */
     public static KeyPair generarClaves() throws NoSuchAlgorithmException {
 
         KeyPairGenerator generador = KeyPairGenerator.getInstance("DSA");
@@ -29,17 +35,30 @@ public class KeyManager {
         return claves;
     }
 
-    public static void guardarClaves(KeyPair claves, String path) throws Exception {
-        FileOutputStream fos = new FileOutputStream(generateKeyPath(path, NOMBRE_CLAVE_PUBLICA, EXTENSION_CLAVE));
+    /**
+     * Almacena un key pair en 2 ficheros con formato (clave_publica/clave_privada)+[id]+.key en el [path] indicado.
+     * @param claves claves generadas
+     * @param path directorio donde se almacenan los ficheros
+     * @return un id representado por el numero al final del nombre del fichero
+     */
+    public static int guardarClaves(KeyPair claves, String path) throws FileNotFoundException, IOException {
+        int id = generateNumberPath(path, NOMBRE_CLAVE_PUBLICA, EXTENSION_CLAVE);
+        System.out.println(path + NOMBRE_CLAVE_PUBLICA + id + EXTENSION_CLAVE);
+        FileOutputStream fos = new FileOutputStream(path + NOMBRE_CLAVE_PUBLICA + id + EXTENSION_CLAVE);
         fos.write(claves.getPublic().getEncoded());
         fos.close();
-        fos = new FileOutputStream(generateKeyPath(path, NOMBRE_CLAVE_PRIVADA, EXTENSION_CLAVE));
+        fos = new FileOutputStream(path + NOMBRE_CLAVE_PRIVADA + id + EXTENSION_CLAVE);
         fos.write(claves.getPrivate().getEncoded());
         fos.close();
+        return id;
     }
 
-    
-    public static PublicKey getClavePublica(String path) throws Exception {
+    /**
+     * Recupera una clave como objeto PublicKey
+     * @param path ruta del fichero
+     * @return PublicKey del fichero especificado
+     */
+    public static PublicKey getClavePublica(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         File ficheroClavePublica = new File(path);
         byte[] bytesClavePublica = Files.readAllBytes(ficheroClavePublica.toPath());
         KeyFactory keyFactory = KeyFactory.getInstance("DSA");
@@ -49,8 +68,12 @@ public class KeyManager {
         return clavePublica;
     }
 
-    
-    public static PrivateKey getClavePrivada(String path) throws Exception {
+    /**
+     * Recupera una clave como objeto PrivateKey
+     * @param path ruta del fichero
+     * @return PrivateKey del fichero especificado
+     */
+    public static PrivateKey getClavePrivada(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         File ficheroClavePrivada = new File(path);
         byte[] bytesClavePrivada = Files.readAllBytes(ficheroClavePrivada.toPath());
         KeyFactory keyFactory = KeyFactory.getInstance("DSA");
@@ -60,12 +83,20 @@ public class KeyManager {
         return clavePrivada;
     }
 
-    private static String generateKeyPath(String path, String name, String extension){
-        int number = 1;
+    /**
+     * Genera un id no existente en el [path] para crear archivos de claves
+     * @param path directorio donde comprobar
+     * @param name nombre que poseera el fichero
+     * @param extension extension que poseera el fichero
+     * @return un id valido que no exista para los ficheros con el nombre [name] y la [extension]
+     */
+    private static int generateNumberPath(String path, String name, String extension) {
+        int number = 0;
         String keyPath;
         do {
-            keyPath = path+name+number+extension;
-        } while(FileService.fileExists(keyPath));
-        return keyPath;
+            number++;
+            keyPath = path + name + number + extension;
+        } while (FileService.fileExists(keyPath));
+        return number;
     }
 }

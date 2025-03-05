@@ -1,12 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package firmadigital;
 
+import firmadigital.FileService;
+import firmadigital.KeyManager;
 import java.awt.Color;
 import java.io.File;
+
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.NoSuchFileException;
 import java.security.InvalidKeyException;
@@ -14,6 +14,7 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.security.spec.InvalidKeySpecException;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 
@@ -23,10 +24,16 @@ import javax.swing.JLabel;
  */
 public class Ventana extends javax.swing.JFrame {
 
-    String chosen_file = "",
-            chosen_key = "",
-            key_dir = System.getProperty("user.dir")+"\\claves\\";
-    byte[] sign;
+    byte[] sign; //Firma digital
+    String  chosen_file = "", //Archivo seleccionado
+            chosen_key = "", //Clave seleccionada
+            key_dir = System.getProperty("user.dir") + "\\claves\\"; //Directorio donde se almacenan las claves
+    //Colores personalizados
+    Color VERDE_OSCURO = new Color(0,153,51),
+            ROJO = new Color(204,0,51),
+            AMARILLO = new Color(204,102,0);
+    JFileChooser fileChooser = new JFileChooser();
+    
     /**
      * Creates new form Ventana
      */
@@ -112,17 +119,12 @@ public class Ventana extends javax.swing.JFrame {
         labelElegirClave.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         labelElegirClave.setText("Elegir clave");
 
-        btnGenerateKey.setBackground(new java.awt.Color(153, 153, 0));
+        btnGenerateKey.setBackground(new java.awt.Color(204, 102, 0));
         btnGenerateKey.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         btnGenerateKey.setText("Generar nueva clave");
         btnGenerateKey.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnGenerateKeyMouseClicked(evt);
-            }
-        });
-        btnGenerateKey.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGenerateKeyActionPerformed(evt);
             }
         });
 
@@ -141,8 +143,6 @@ public class Ventana extends javax.swing.JFrame {
                 btnSelectKeyMouseClicked(evt);
             }
         });
-
-        newKeyLabel.setText("newKeyLabel");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -186,9 +186,9 @@ public class Ventana extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(title)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnGenerateKey)
-                    .addComponent(newKeyLabel))
+                    .addComponent(newKeyLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
@@ -222,139 +222,86 @@ public class Ventana extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /*Metodo Reutilizado de la practica almacenamiento seguro*/
+    /*Boton para seleccionar un fichero*/
     private void btnSelectFileMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSelectFileMouseClicked
-        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
         int val = fileChooser.showOpenDialog(null);
+
         if (val == JFileChooser.OPEN_DIALOG) {
             chosen_file = fileChooser.getSelectedFile().getAbsolutePath();
             String fileName = fileChooser.getSelectedFile().getName();
             selectedFileLabel.setText(fileName);
             System.out.println(chosen_file);
         }
+
         resetFeedback(feedbackLabel1);
         resetFeedback(feedbackLabel2);
     }//GEN-LAST:event_btnSelectFileMouseClicked
 
+    /*Boton para generar una firma*/
     private void btnGenerateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGenerateMouseClicked
         try {
             Signature signature = Signature.getInstance("DSA");
-            signature.initSign(KeyManager.getClavePrivada(key_dir));
+            signature.initSign(KeyManager.getClavePrivada(chosen_key));
             signature.update(FileService.readFile(chosen_file));
             sign = signature.sign();
-            changeFeedback(feedbackLabel1, "Firma generada con éxito", Color.green);
+
+            changeFeedback(feedbackLabel1, "Firma generada con éxito.", VERDE_OSCURO);
             resetFeedback(feedbackLabel2);
-        /*SECCION DE ERRORES Y FEEDBACK*/
-        } catch (FileNotFoundException ex) {
-            changeFeedback(feedbackLabel1, "Error, elige un archivo válido.", Color.red);
-            resetFeedback(feedbackLabel2);
-        } catch (NoSuchAlgorithmException ex) {
-            changeFeedback(feedbackLabel1, "Error, algoritmo no válido.", Color.black);
-            resetFeedback(feedbackLabel2);
-        } catch (InvalidKeyException ex) {
-            changeFeedback(feedbackLabel1, "Error, clave inválida.", Color.black);
-            resetFeedback(feedbackLabel2);
-        } catch (UnsupportedEncodingException ex) {
-            changeFeedback(feedbackLabel1, "Error, encriptación no válida.", Color.black);
-            resetFeedback(feedbackLabel2);
-        } catch (SignatureException ex) {
-            changeFeedback(feedbackLabel1, "Error al firmar.", Color.red);
-            resetFeedback(feedbackLabel2);
-        } catch (NoSuchFileException ex) {
-            try {
-                changeFeedback(feedbackLabel1, "Fichero de clave privada no encontrada.", Color.red);
-                changeFeedback(feedbackLabel2, "Generando claves... Por favor genera de nuevo.", Color.yellow);
-                KeyPair keys = KeyManager.generarClaves();
-                KeyManager.guardarClaves(keys, key_dir);
-            } catch (NoSuchAlgorithmException ex1) {
-                changeFeedback(feedbackLabel1, "Error al generar claves.", Color.red);
-                resetFeedback(feedbackLabel2);
-            } catch (Exception ex1) {
-                changeFeedback(feedbackLabel1, "Error no especifico.", Color.PINK);
-                resetFeedback(feedbackLabel2);
-                ex.printStackTrace();
-            }
         } catch (Exception ex) {
-            changeFeedback(feedbackLabel1,"Error no especifico.", Color.PINK);
-            resetFeedback(feedbackLabel2);
-            ex.printStackTrace();
-        } 
+            exceptionResolver(ex);
+        }
     }//GEN-LAST:event_btnGenerateMouseClicked
 
+    /*Boton para validar una firma*/
     private void btnValidateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnValidateMouseClicked
         try {
             Signature signature = Signature.getInstance("DSA");
-            signature.initVerify(KeyManager.getClavePublica(key_dir));
+            signature.initVerify(KeyManager.getClavePublica(chosen_key));
             signature.update(FileService.readFile(chosen_file));
+
             if (signature.verify(sign)) {
-                changeFeedback(feedbackLabel1,"Mensaje verificado",Color.green);
+                changeFeedback(feedbackLabel1, "Mensaje verificado.", VERDE_OSCURO);
                 resetFeedback(feedbackLabel2);
             } else {
-                changeFeedback(feedbackLabel1,"Atencion: el fichero no es fiable",Color.yellow);
-                changeFeedback(feedbackLabel2, "Esta modificado o encriptado por otra clave", Color.yellow);
-            }
-        /*SECCION DE ERRORES Y FEEDBACK*/
-        } catch (FileNotFoundException ex) {
-            changeFeedback(feedbackLabel1, "Error, elige un archivo válido.", Color.red);
-            resetFeedback(feedbackLabel2);
-        } catch (NoSuchAlgorithmException ex) {
-            changeFeedback(feedbackLabel1, "Error, algoritmo no válido.", Color.black);
-            resetFeedback(feedbackLabel2);
-        } catch (InvalidKeyException ex) {
-            changeFeedback(feedbackLabel1, "Error, clave inválida.", Color.black);
-            resetFeedback(feedbackLabel2);
-        } catch (UnsupportedEncodingException ex) {
-            changeFeedback(feedbackLabel1, "Error, encriptación no válida.", Color.black);
-            resetFeedback(feedbackLabel2);
-        } catch (SignatureException ex) {
-            changeFeedback(feedbackLabel1, "Error al firmar.", Color.red);
-            resetFeedback(feedbackLabel2);
-        } catch (NoSuchFileException ex) {
-            try {
-                changeFeedback(feedbackLabel1, "Fichero de clave privada no encontrada.", Color.red);
-                changeFeedback(feedbackLabel2, "Generando claves... Por favor genera de nuevo.", Color.yellow);
-                KeyPair keys = KeyManager.generarClaves();
-                KeyManager.guardarClaves(keys, key_dir);
-            } catch (NoSuchAlgorithmException ex1) {
-                changeFeedback(feedbackLabel1, "Error al generar claves.", Color.red);
-                resetFeedback(feedbackLabel2);
-            } catch (Exception ex1) {
-                changeFeedback(feedbackLabel1, "Error no especifico.", Color.PINK);
-                resetFeedback(feedbackLabel2);
-                ex.printStackTrace();
+                changeFeedback(feedbackLabel1, "Atencion: el fichero no es fiable.", AMARILLO);
+                changeFeedback(feedbackLabel2, "Esta modificado o encriptado por otra clave.", AMARILLO);
             }
         } catch (Exception ex) {
-            changeFeedback(feedbackLabel1,"Error no especifico.", Color.PINK);
-            resetFeedback(feedbackLabel2);
-            ex.printStackTrace();
+            exceptionResolver(ex);
         }
     }//GEN-LAST:event_btnValidateMouseClicked
 
+    /*Boton para generar nuevas claves*/
     private void btnGenerateKeyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGenerateKeyMouseClicked
-        // TODO add your handling code here:
+        try {
+            KeyPair keys = KeyManager.generarClaves();
+            int id = KeyManager.guardarClaves(keys, key_dir);
+            changeFeedback(newKeyLabel, "Nuevas claves con id " + id, AMARILLO);
+        } catch (Exception ex) {
+            exceptionResolver(ex);
+        }
     }//GEN-LAST:event_btnGenerateKeyMouseClicked
 
+    /*Boton para seleccionar una clave*/
     private void btnSelectKeyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSelectKeyMouseClicked
-        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setCurrentDirectory(new File(key_dir));
         int val = fileChooser.showOpenDialog(null);
+
         if (val == JFileChooser.OPEN_DIALOG) {
             chosen_key = fileChooser.getSelectedFile().getAbsolutePath();
             String fileName = fileChooser.getSelectedFile().getName();
             selectedKeyLabel.setText(fileName);
             System.out.println(fileName);
         }
+
         resetFeedback(feedbackLabel1);
         resetFeedback(feedbackLabel2);
     }//GEN-LAST:event_btnSelectKeyMouseClicked
 
-    private void btnGenerateKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateKeyActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnGenerateKeyActionPerformed
-
+    /*Boton para seleccionar una clave*/
     /**
      * @param args the command line arguments
      */
@@ -389,15 +336,64 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
     }
+
+    /*Metodos personalizados*/
     
-    private void changeFeedback(JLabel label, String text, Color color){
+    /*Gestion de labels de feedback*/
+    private void changeFeedback(JLabel label, String text, Color color) {
         label.setText(text);
         label.setForeground(color);
     }
-    
-    private void resetFeedback(JLabel label){
+
+    private void resetFeedback(JLabel label) {
         label.setText("");
         label.setForeground(Color.black);
+    }
+
+    /*Control de errores*/
+    private void exceptionResolver(Exception ex) {
+        switch (ex) {
+            /*Errores IO*/
+            case UnsupportedEncodingException e -> {
+                changeFeedback(feedbackLabel1, "Error, encriptación no válida.", ROJO);
+                resetFeedback(feedbackLabel2);
+            }
+            case NoSuchFileException e -> {
+                changeFeedback(feedbackLabel1, "Error, clave no encontrada.", ROJO);
+                resetFeedback(feedbackLabel2);
+            }
+            case FileNotFoundException e -> {
+                changeFeedback(feedbackLabel1, "Error, elige un archivo válido.", ROJO);
+                resetFeedback(feedbackLabel2);
+            }
+            case IOException e -> {
+                changeFeedback(feedbackLabel1, "Error, archivo no encontrado.", ROJO);
+                resetFeedback(feedbackLabel2);
+            }
+            
+            /*Errores firma*/
+            case NoSuchAlgorithmException e -> {
+                changeFeedback(feedbackLabel1, "Error, algoritmo no válido.", ROJO);
+                resetFeedback(feedbackLabel2);
+            }
+            case InvalidKeySpecException e -> {
+                changeFeedback(feedbackLabel1, "Error, clave inválida.", ROJO);
+                changeFeedback(feedbackLabel2, "Elige la clave publica.", ROJO);
+            }
+            case InvalidKeyException e -> {
+                changeFeedback(feedbackLabel1, "Error, clave inválida.", ROJO);
+                resetFeedback(feedbackLabel2);
+            }
+            case SignatureException e -> {
+                changeFeedback(feedbackLabel1, "Error al firmar.", ROJO);
+                resetFeedback(feedbackLabel2);
+            }
+            
+            default -> {
+                changeFeedback(feedbackLabel1, "Error desconocido: " + ex.getMessage(), ROJO);
+                resetFeedback(feedbackLabel2);
+            }
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

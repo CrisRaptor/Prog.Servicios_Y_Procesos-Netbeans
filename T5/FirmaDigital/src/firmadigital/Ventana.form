@@ -72,9 +72,9 @@
               <EmptySpace max="32767" attributes="0"/>
               <Component id="title" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnGenerateKey" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="newKeyLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="btnGenerateKey" min="-2" max="-2" attributes="0"/>
+                  <Component id="newKeyLabel" min="-2" pref="27" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
@@ -235,7 +235,7 @@
     <Component class="javax.swing.JButton" name="btnGenerateKey">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="0" green="99" red="99" type="rgb"/>
+          <Color blue="0" green="66" red="cc" type="rgb"/>
         </Property>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="12" style="1"/>
@@ -244,7 +244,6 @@
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnGenerateKeyMouseClicked"/>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGenerateKeyActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="labelClaveSeleccionada">
@@ -279,9 +278,6 @@
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="newKeyLabel">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="newKeyLabel"/>
-      </Properties>
     </Component>
   </SubComponents>
 </Form>
