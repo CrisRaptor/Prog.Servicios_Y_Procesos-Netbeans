@@ -95,7 +95,7 @@ public class Ventana extends javax.swing.JFrame {
         btnEncode.setText("Cifrar archivo");
         btnEncode.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnEncode(evt);
+                encodeBtn(evt);
             }
         });
 
@@ -140,7 +140,7 @@ public class Ventana extends javax.swing.JFrame {
         btnGenerate.setText("Generar firma");
         btnGenerate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnSign(evt);
+                signBtn(evt);
             }
         });
 
@@ -149,7 +149,7 @@ public class Ventana extends javax.swing.JFrame {
         btnSelectKeySign.setText("Clave");
         btnSelectKeySign.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnSelectKeySign(evt);
+                keySignSelectBtn(evt);
             }
         });
 
@@ -198,7 +198,7 @@ public class Ventana extends javax.swing.JFrame {
         btnSelectKeyValidate.setText("Clave");
         btnSelectKeyValidate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnSelectKeyValidate(evt);
+                keyValidateSelectBtn(evt);
             }
         });
 
@@ -214,7 +214,7 @@ public class Ventana extends javax.swing.JFrame {
         btnValidate.setText("Validar Firma");
         btnValidate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnValidate(evt);
+                validateBtn(evt);
             }
         });
 
@@ -260,7 +260,7 @@ public class Ventana extends javax.swing.JFrame {
         btnDecode.setText("Descifrar archivo");
         btnDecode.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnDecode(evt);
+                decodeBtn(evt);
             }
         });
 
@@ -305,7 +305,7 @@ public class Ventana extends javax.swing.JFrame {
         btnSelectFile.setText("Archivo");
         btnSelectFile.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnSelectFile(evt);
+                selectFileBtn(evt);
             }
         });
 
@@ -320,7 +320,7 @@ public class Ventana extends javax.swing.JFrame {
         btnGenerateKey.setText("Generar nueva clave");
         btnGenerateKey.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnGenerateNewKey(evt);
+                newKeyBtn(evt);
             }
         });
 
@@ -383,9 +383,33 @@ public class Ventana extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEncode(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEncode
+    private void selectFileBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_selectFileBtn
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
+        int val = fileChooser.showOpenDialog(null);
+
+        if (val == JFileChooser.OPEN_DIALOG) {
+            chosen_file = fileChooser.getSelectedFile().getAbsolutePath();
+            String fileName = fileChooser.getSelectedFile().getName();
+            selectedFileLabel.setText(fileName);
+        }
+
+        resetFeedback(textAreaFeedback);
+    }//GEN-LAST:event_selectFileBtn
+
+    private void newKeyBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newKeyBtn
+        try {
+            KeyPair keys = KeyManager.generarClaves();
+            int id = KeyManager.guardarClaves(keys, key_dir);
+            changeFeedback(textAreaFeedback, "Nuevas claves con id " + id, AMARILLO);
+        } catch (Exception ex) {
+            exceptionResolver(ex);
+        }
+    }//GEN-LAST:event_newKeyBtn
+
+    private void encodeBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodeBtn
         if (!"".equals(chosen_file) && !"".equals(cipherKeyEncode.getText().trim())
-            && cipherKeyEncode.getText().trim().length() >= KEY_SIZE)  {
+            && cipherKeyEncode.getText().trim().length() >= KEY_SIZE) {
             try {
                 Key clave = AESSimpleManager.obtenerClave(cipherKeyEncode.getText().trim(), KEY_SIZE);
                 String text =  new String(FileService.readFile(chosen_file));
@@ -411,93 +435,9 @@ public class Ventana extends javax.swing.JFrame {
             }
             changeFeedback(textAreaFeedback, "Fallo al cifrar."+more_details, ROJO);
         }
-    }//GEN-LAST:event_btnEncode
+    }//GEN-LAST:event_encodeBtn
 
-    private void btnGenerateNewKey(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGenerateNewKey
-        try {
-            KeyPair keys = KeyManager.generarClaves();
-            int id = KeyManager.guardarClaves(keys, key_dir);
-            changeFeedback(textAreaFeedback, "Nuevas claves con id " + id, AMARILLO);
-        } catch (Exception ex) {
-            exceptionResolver(ex);
-        }
-    }//GEN-LAST:event_btnGenerateNewKey
-
-    private void btnSelectKeyValidate(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSelectKeyValidate
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setCurrentDirectory(new File(key_dir));
-        int val = fileChooser.showOpenDialog(null);
-
-        if (val == JFileChooser.OPEN_DIALOG) {
-            chosen_key_validate = fileChooser.getSelectedFile().getAbsolutePath();
-            String fileName = fileChooser.getSelectedFile().getName();
-            selectedKeyValidateLabel.setText(fileName);
-        }
-
-        resetFeedback(textAreaFeedback);
-    }//GEN-LAST:event_btnSelectKeyValidate
-
-    private void btnValidate(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnValidate
-        try {
-            Signature signature = Signature.getInstance("DSA");
-            signature.initVerify(KeyManager.getClavePublica(chosen_key_validate));
-            signature.update(FileService.readFile(chosen_file));
-
-            if (signature.verify(sign)) {
-                changeFeedback(textAreaFeedback, "Mensaje verificado.", VERDE_OSCURO);
-            } else {
-                changeFeedback(textAreaFeedback, """
-                                                 Atencion: el fichero no es fiable.
-                                                 Esta modificado o encriptado por otra clave.""", AMARILLO);
-            }
-        } catch (Exception ex) {
-            exceptionResolver(ex);
-        }
-    }//GEN-LAST:event_btnValidate
-
-    private void btnSelectFile(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSelectFile
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
-        int val = fileChooser.showOpenDialog(null);
-
-        if (val == JFileChooser.OPEN_DIALOG) {
-            chosen_file = fileChooser.getSelectedFile().getAbsolutePath();
-            String fileName = fileChooser.getSelectedFile().getName();
-            selectedFileLabel.setText(fileName);
-        }
-
-        resetFeedback(textAreaFeedback);
-    }//GEN-LAST:event_btnSelectFile
-
-    private void btnSelectKeySign(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSelectKeySign
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setCurrentDirectory(new File(key_dir));
-        int val = fileChooser.showOpenDialog(null);
-
-        if (val == JFileChooser.OPEN_DIALOG) {
-            chosen_key_sign = fileChooser.getSelectedFile().getAbsolutePath();
-            String fileName = fileChooser.getSelectedFile().getName();
-            selectedKeySignLabel.setText(fileName);
-        }
-
-        resetFeedback(textAreaFeedback);
-    }//GEN-LAST:event_btnSelectKeySign
-
-    private void btnSign(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSign
-        try {
-            Signature signature = Signature.getInstance("DSA");
-            signature.initSign(KeyManager.getClavePrivada(chosen_key_sign));
-            signature.update(FileService.readFile(chosen_file));
-            sign = signature.sign();
-
-            changeFeedback(textAreaFeedback, "Firma generada con éxito.", VERDE_OSCURO);
-            resetFeedback(textAreaFeedback);
-        } catch (Exception ex) {
-            exceptionResolver(ex);
-        }
-    }//GEN-LAST:event_btnSign
-
-    private void btnDecode(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDecode
+    private void decodeBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_decodeBtn
         if (!"".equals(chosen_file) && !"".equals(cipherKeyDecode.getText().trim())
                 && cipherKeyDecode.getText().trim().length() >= KEY_SIZE) {
             try {
@@ -525,7 +465,67 @@ public class Ventana extends javax.swing.JFrame {
             }
             changeFeedback(textAreaFeedback, "Fallo al cifrar."+more_details, ROJO);
         }
-    }//GEN-LAST:event_btnDecode
+    }//GEN-LAST:event_decodeBtn
+
+    private void keySignSelectBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keySignSelectBtn
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setCurrentDirectory(new File(key_dir));
+        int val = fileChooser.showOpenDialog(null);
+
+        if (val == JFileChooser.OPEN_DIALOG) {
+            chosen_key_sign = fileChooser.getSelectedFile().getAbsolutePath();
+            String fileName = fileChooser.getSelectedFile().getName();
+            selectedKeySignLabel.setText(fileName);
+        }
+
+        resetFeedback(textAreaFeedback);
+    }//GEN-LAST:event_keySignSelectBtn
+
+    private void signBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signBtn
+        try {
+            Signature signature = Signature.getInstance("DSA");
+            signature.initSign(KeyManager.getClavePrivada(chosen_key_sign));
+            signature.update(FileService.readFile(chosen_file));
+            sign = signature.sign();
+
+            changeFeedback(textAreaFeedback, "Firma generada con éxito.", VERDE_OSCURO);
+            resetFeedback(textAreaFeedback);
+        } catch (Exception ex) {
+            exceptionResolver(ex);
+        }
+    }//GEN-LAST:event_signBtn
+
+    private void keyValidateSelectBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keyValidateSelectBtn
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setCurrentDirectory(new File(key_dir));
+        int val = fileChooser.showOpenDialog(null);
+
+        if (val == JFileChooser.OPEN_DIALOG) {
+            chosen_key_validate = fileChooser.getSelectedFile().getAbsolutePath();
+            String fileName = fileChooser.getSelectedFile().getName();
+            selectedKeyValidateLabel.setText(fileName);
+        }
+
+        resetFeedback(textAreaFeedback);
+    }//GEN-LAST:event_keyValidateSelectBtn
+
+    private void validateBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_validateBtn
+        try {
+            Signature signature = Signature.getInstance("DSA");
+            signature.initVerify(KeyManager.getClavePublica(chosen_key_validate));
+            signature.update(FileService.readFile(chosen_file));
+
+            if (signature.verify(sign)) {
+                changeFeedback(textAreaFeedback, "Mensaje verificado.", VERDE_OSCURO);
+            } else {
+                changeFeedback(textAreaFeedback, """
+                                                 Atencion: el fichero no es fiable.
+                                                 Esta modificado o encriptado por otra clave.""", AMARILLO);
+            }
+        } catch (Exception ex) {
+            exceptionResolver(ex);
+        }
+    }//GEN-LAST:event_validateBtn
 
     /*Metodos personalizados*/
     

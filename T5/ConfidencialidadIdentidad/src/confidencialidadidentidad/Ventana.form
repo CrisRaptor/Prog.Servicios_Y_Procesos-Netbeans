@@ -159,7 +159,7 @@
                 <Property name="text" type="java.lang.String" value="Cifrar archivo"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnEncode"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="encodeBtn"/>
               </Events>
             </Component>
           </SubComponents>
@@ -254,7 +254,7 @@
                 <Property name="text" type="java.lang.String" value="Generar firma"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSign"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="signBtn"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnSelectKeySign">
@@ -268,7 +268,7 @@
                 <Property name="text" type="java.lang.String" value="Clave"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSelectKeySign"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="keySignSelectBtn"/>
               </Events>
             </Component>
           </SubComponents>
@@ -346,7 +346,7 @@
                 <Property name="text" type="java.lang.String" value="Clave"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSelectKeyValidate"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="keyValidateSelectBtn"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="labelClaveSeleccionada1">
@@ -377,7 +377,7 @@
                 <Property name="text" type="java.lang.String" value="Validar Firma"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnValidate"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="validateBtn"/>
               </Events>
             </Component>
           </SubComponents>
@@ -431,7 +431,7 @@
                 <Property name="text" type="java.lang.String" value="Descifrar archivo"/>
               </Properties>
               <Events>
-                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnDecode"/>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="decodeBtn"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="cipherKeyDecode">
@@ -476,7 +476,7 @@
         <Property name="text" type="java.lang.String" value="Archivo"/>
       </Properties>
       <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnSelectFile"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="selectFileBtn"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="labelArchivo">
@@ -508,7 +508,7 @@
         <Property name="text" type="java.lang.String" value="Generar nueva clave"/>
       </Properties>
       <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="btnGenerateNewKey"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="newKeyBtn"/>
       </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">

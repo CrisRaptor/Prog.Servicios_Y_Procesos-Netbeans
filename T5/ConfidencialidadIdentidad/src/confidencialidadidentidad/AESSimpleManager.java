@@ -27,10 +27,4 @@ public class AESSimpleManager {
 
         return new String(plainText);
     }
-    
-    
-    
-
-    
-    
 }
