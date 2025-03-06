@@ -232,7 +232,6 @@ public class Ventana extends javax.swing.JFrame {
             chosen_file = fileChooser.getSelectedFile().getAbsolutePath();
             String fileName = fileChooser.getSelectedFile().getName();
             selectedFileLabel.setText(fileName);
-            System.out.println(chosen_file);
         }
 
         resetFeedback(feedbackLabel1);
@@ -294,7 +293,6 @@ public class Ventana extends javax.swing.JFrame {
             chosen_key = fileChooser.getSelectedFile().getAbsolutePath();
             String fileName = fileChooser.getSelectedFile().getName();
             selectedKeyLabel.setText(fileName);
-            System.out.println(fileName);
         }
 
         resetFeedback(feedbackLabel1);
