@@ -28,7 +28,7 @@ public class KeyManager {
      */
     public static KeyPair generarClaves() throws NoSuchAlgorithmException {
 
-        KeyPairGenerator generador = KeyPairGenerator.getInstance("DSA");
+        KeyPairGenerator generador = KeyPairGenerator.getInstance("RSA");
         generador.initialize(512);   // Admite 512, 768 ó 1024
         KeyPair claves = generador.generateKeyPair();
 

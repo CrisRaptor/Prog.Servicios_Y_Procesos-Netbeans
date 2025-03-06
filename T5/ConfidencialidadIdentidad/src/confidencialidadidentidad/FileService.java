@@ -33,6 +33,11 @@ public class FileService {
         writer.write(data);
         writer.close();
     }
+    
+    public static void createFile(String path, String name) throws IOException{
+        File file = new File(path+name);
+        file.createNewFile();
+    }
 
     public static boolean fileExists(String path) {
         File f = new File(path);
