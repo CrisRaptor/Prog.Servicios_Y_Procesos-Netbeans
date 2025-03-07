@@ -20,7 +20,8 @@ public class KeyManager {
 
     private static final String NOMBRE_CLAVE_PUBLICA = "clave_publica",
             NOMBRE_CLAVE_PRIVADA = "clave_privada",
-            EXTENSION_CLAVE = ".key";
+            EXTENSION_CLAVE = ".key",
+            ALGORITMO = "RSA";
 
     /**
      * Genera un par de claves
@@ -28,7 +29,7 @@ public class KeyManager {
      */
     public static KeyPair generarClaves() throws NoSuchAlgorithmException {
 
-        KeyPairGenerator generador = KeyPairGenerator.getInstance("RSA");
+        KeyPairGenerator generador = KeyPairGenerator.getInstance(ALGORITMO);
         generador.initialize(512);   // Admite 512, 768 ó 1024
         KeyPair claves = generador.generateKeyPair();
 
@@ -43,7 +44,6 @@ public class KeyManager {
      */
     public static int guardarClaves(KeyPair claves, String path) throws FileNotFoundException, IOException {
         int id = generateNumberPath(path, NOMBRE_CLAVE_PUBLICA, EXTENSION_CLAVE);
-        System.out.println(path + NOMBRE_CLAVE_PUBLICA + id + EXTENSION_CLAVE);
         FileOutputStream fos = new FileOutputStream(path + NOMBRE_CLAVE_PUBLICA + id + EXTENSION_CLAVE);
         fos.write(claves.getPublic().getEncoded());
         fos.close();
@@ -61,7 +61,7 @@ public class KeyManager {
     public static PublicKey getClavePublica(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         File ficheroClavePublica = new File(path);
         byte[] bytesClavePublica = Files.readAllBytes(ficheroClavePublica.toPath());
-        KeyFactory keyFactory = KeyFactory.getInstance("DSA");
+        KeyFactory keyFactory = KeyFactory.getInstance(ALGORITMO);
         EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(bytesClavePublica);
         PublicKey clavePublica = keyFactory.generatePublic(publicKeySpec);
 
@@ -76,7 +76,7 @@ public class KeyManager {
     public static PrivateKey getClavePrivada(String path) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         File ficheroClavePrivada = new File(path);
         byte[] bytesClavePrivada = Files.readAllBytes(ficheroClavePrivada.toPath());
-        KeyFactory keyFactory = KeyFactory.getInstance("DSA");
+        KeyFactory keyFactory = KeyFactory.getInstance(ALGORITMO);
         EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(bytesClavePrivada);
         PrivateKey clavePrivada = keyFactory.generatePrivate(privateKeySpec);
 

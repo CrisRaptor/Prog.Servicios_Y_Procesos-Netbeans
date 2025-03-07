@@ -13,6 +13,7 @@ import java.security.KeyPair;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import javax.swing.JFileChooser;
@@ -23,21 +24,19 @@ import javax.swing.JTextArea;
  * @author CrisGC
  */
 public class Ventana extends javax.swing.JFrame {
-    final String ENCODE_EXTENSION = ".rsa",
-            ROOT_DIR = System.getProperty("user.dir"),
+    //Constantes
+    final String ENCODE_EXTENSION = ".rsa", //Extension de cifrado
+            ROOT_DIR = System.getProperty("user.dir"), //Directorio del proyecto
             KEY_DIR = ROOT_DIR + "\\claves\\"; //Directorio donde se almacenan las claves; //Formato de los ficheros
-    final int KEY_SIZE = 16; //Tamaño de clave
     
     byte[] sign; //Firma digital
-    String  chosen_file = "", //Archivo seleccionado
-            chosen_key_sign = "", //Clave seleccionada para firmar
+    String  chosen_key_sign = "", //Clave seleccionada para firmar
             chosen_key_validate = ""; //Clave seleccionada para validar
             
     //Colores personalizados
-    static Color VERDE_OSCURO = new Color(0,153,51),
-            ROJO = new Color(204,0,51),
-            AMARILLO = new Color(204,102,0),
-            AZUL = new Color(102,102,255);
+    static Color ROJO = new Color(204,0,51),
+            AMARILLO = new Color(204,102,0);
+    
     JFileChooser fileChooser = new JFileChooser();
     /**
      * Creates new form Ventana
@@ -287,8 +286,10 @@ public class Ventana extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /*Boton para generar un par de claves nuevas*/
     private void newKeyBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_newKeyBtn
         try {
+            //Generar y guardar claves
             KeyPair keys = KeyManager.generarClaves();
             int id = KeyManager.guardarClaves(keys, KEY_DIR);
             changeFeedback(textAreaFeedback, "Nuevas claves con id " + id, AMARILLO);
@@ -301,17 +302,32 @@ public class Ventana extends javax.swing.JFrame {
         PublicKey clavePublica;
         File fichero = new File(fileName.getText().trim()+ENCODE_EXTENSION);
         try {
-            clavePublica = KeyManager.getClavePublica(chosen_key_validate);
-            byte[] mensajeCifrado = Files.readAllBytes(fichero.toPath());
-            byte[] mensajeDescifrado = RSAManager.descifrar(mensajeCifrado, clavePublica);
-            String mensaje = new String(mensajeDescifrado, StandardCharsets.UTF_8);
-            System.out.println("Mensaje decodificado:\n"+mensaje);
-            changeFeedback(textAreaFeedback, mensaje, Color.black);
+            //Validate / Verificado
+            Signature signature = Signature.getInstance("SHA256withRSA");
+            signature.initVerify(KeyManager.getClavePublica(chosen_key_validate));
+            signature.update(Files.readAllBytes(fichero.toPath()));
+            
+            //Segun la validacion
+            if (signature.verify(sign)) { //Veridico
+                //Decode / Desencriptar
+                clavePublica = KeyManager.getClavePublica(chosen_key_validate);
+                byte[] mensajeCifrado = Files.readAllBytes(fichero.toPath());
+                byte[] mensajeDescifrado = RSAManager.descifrar(mensajeCifrado, clavePublica);
+                String mensaje = new String(mensajeDescifrado, StandardCharsets.UTF_8);
+                
+                resetData();
+                changeFeedback(textAreaFeedback, "Mensaje verificado y decodificado:\n"+mensaje, Color.black);
+            } else { //No veridico
+                changeFeedback(textAreaFeedback, """
+                                                 Atencion: el fichero no es fiable.
+                                                 Esta modificado o encriptado por otra clave.""", AMARILLO);
+            }
         } catch (Exception ex) {
             exceptionResolver(ex);
         }
     }//GEN-LAST:event_validateDecodeBtn
 
+    /*Boton para seleccionar clave de validacion*/
     private void keyValidateSelectBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keyValidateSelectBtn
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setCurrentDirectory(new File(KEY_DIR));
@@ -326,6 +342,7 @@ public class Ventana extends javax.swing.JFrame {
         resetFeedback(textAreaFeedback);
     }//GEN-LAST:event_keyValidateSelectBtn
 
+    /*Boton para seleccionar clave de firma*/
     private void keySignSelectBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keySignSelectBtn
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setCurrentDirectory(new File(KEY_DIR));
@@ -340,14 +357,29 @@ public class Ventana extends javax.swing.JFrame {
         resetFeedback(textAreaFeedback);
     }//GEN-LAST:event_keySignSelectBtn
 
+    /*Boton de Cifrar y Firmar*/
     private void encodeSignBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodeSignBtn
         PrivateKey clavePrivada;
         try {
-            FileService.createFile(ROOT_DIR, fileName.getText().trim());
-            File fichero = new File(fileName.getText().trim()+ENCODE_EXTENSION);
-            clavePrivada = KeyManager.getClavePrivada(chosen_key_sign);
-            byte[] mensajeCifrado = RSAManager.cifrar(fileMessage.getText(), clavePrivada);
-            Files.write(fichero.toPath(),mensajeCifrado);
+            //Condicion, requiere un mensaje
+            if (!"".equals(fileName.getText().trim())){
+                //Encode / Encriptar
+                FileService.createFile(ROOT_DIR, fileName.getText().trim());
+                File fichero = new File(fileName.getText().trim()+ENCODE_EXTENSION);
+                clavePrivada = KeyManager.getClavePrivada(chosen_key_sign);
+                byte[] mensajeCifrado = RSAManager.cifrar(fileMessage.getText(), clavePrivada);
+                Files.write(fichero.toPath(),mensajeCifrado);
+                //Sign / Firma
+                Signature signature = Signature.getInstance("SHA256withRSA");
+                signature.initSign(KeyManager.getClavePrivada(chosen_key_sign));
+                signature.update(Files.readAllBytes(fichero.toPath()));
+                sign = signature.sign();
+
+                changeFeedback(textAreaFeedback, "Mensaje codificado y firmado.", Color.black);
+            } else {
+                changeFeedback(textAreaFeedback, "Escribe un mensaje válido.", ROJO);
+            }
+            
         } catch (Exception ex) {
             exceptionResolver(ex);
         }
@@ -364,6 +396,15 @@ public class Ventana extends javax.swing.JFrame {
     private void resetFeedback(JTextArea textArea) {
         textArea.setText("");
         textArea.setForeground(Color.black);
+    }
+    
+    /*Reinicia los valores*/
+    private void resetData() {
+        chosen_key_sign = ""; //Clave seleccionada para firmar
+        chosen_key_validate = ""; //Clave seleccionada para validar
+        fileMessage.setText(""); //Campo de mensaje
+        selectedKeySignLabel.setText("-"); //Label que muestra la clave de firma
+        selectedKeyValidateLabel.setText("-"); //Label que muestra la clave de validacion
     }
 
     /*Control de errores*/
@@ -388,7 +429,10 @@ public class Ventana extends javax.swing.JFrame {
                 changeFeedback(textAreaFeedback, "Error, algoritmo no válido.", ROJO);
             }
             case InvalidKeySpecException e -> {
-                changeFeedback(textAreaFeedback, "Error, clave inválida.\nElige la clave publica.", ROJO);
+                changeFeedback(textAreaFeedback, """
+                                                 Error, tipo de clave.
+                                                 Elige la clave opuesta.
+                                                 Firmar necesita una clave privada, Validar necesita una clave publica.""", ROJO);
             }
             case InvalidKeyException e -> {
                 changeFeedback(textAreaFeedback, "Error, clave inválida.", ROJO);
