@@ -24,20 +24,24 @@ import javax.swing.JTextArea;
  * @author CrisGC
  */
 public class Ventana extends javax.swing.JFrame {
+
     //Constantes
     final String ENCODE_EXTENSION = ".rsa", //Extension de cifrado
             ROOT_DIR = System.getProperty("user.dir"), //Directorio del proyecto
             KEY_DIR = ROOT_DIR + "\\claves\\"; //Directorio donde se almacenan las claves; //Formato de los ficheros
-    
+
     byte[] sign; //Firma digital
-    String  chosen_key_sign = "", //Clave seleccionada para firmar
-            chosen_key_validate = ""; //Clave seleccionada para validar
-            
+    String chosen_key_encode = "", //Clave seleccionada para cifrar
+            chosen_key_sign = "", //Clave seleccionada para firmar
+            chosen_key_validate = "", //Clave seleccionada para validar
+            chosen_key_decode = ""; //Clave seleccionada para descifrar
+
     //Colores personalizados
-    static Color ROJO = new Color(204,0,51),
-            AMARILLO = new Color(204,102,0);
-    
+    static Color ROJO = new Color(204, 0, 51),
+            AMARILLO = new Color(204, 102, 0);
+
     JFileChooser fileChooser = new JFileChooser();
+
     /**
      * Creates new form Ventana
      */
@@ -55,18 +59,34 @@ public class Ventana extends javax.swing.JFrame {
     private void initComponents() {
 
         tabPane = new javax.swing.JTabbedPane();
-        panelEncode = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        labelElegirClave3 = new javax.swing.JLabel();
+        btnSelectKeyEncode = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        labelClaveSeleccionada3 = new javax.swing.JLabel();
+        selectedKeyEncodeLabel = new javax.swing.JLabel();
         btnEncode = new javax.swing.JButton();
+        panelEncode = new javax.swing.JPanel();
+        btnSign = new javax.swing.JButton();
         labelClaveSeleccionada = new javax.swing.JLabel();
         selectedKeySignLabel = new javax.swing.JLabel();
         labelElegirClave = new javax.swing.JLabel();
         btnSelectKeySign = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         panelDecode = new javax.swing.JPanel();
         labelElegirClave1 = new javax.swing.JLabel();
         btnSelectKeyValidate = new javax.swing.JButton();
         labelClaveSeleccionada1 = new javax.swing.JLabel();
         selectedKeyValidateLabel = new javax.swing.JLabel();
         btnValidate = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        btnDecode = new javax.swing.JButton();
+        selectedKeyDecodeLabel = new javax.swing.JLabel();
+        labelClaveSeleccionada2 = new javax.swing.JLabel();
+        labelElegirClave2 = new javax.swing.JLabel();
+        btnSelectKeyDecode = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
         title = new javax.swing.JLabel();
         btnGenerateKey = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -83,12 +103,84 @@ public class Ventana extends javax.swing.JFrame {
         tabPane.setBackground(new java.awt.Color(102, 0, 102));
         tabPane.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
+        labelElegirClave3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        labelElegirClave3.setText("Elegir clave");
+
+        btnSelectKeyEncode.setBackground(new java.awt.Color(153, 153, 0));
+        btnSelectKeyEncode.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSelectKeyEncode.setText("Clave");
+        btnSelectKeyEncode.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                keyEncodeSelectBtn(evt);
+            }
+        });
+
+        jLabel4.setBackground(new java.awt.Color(204, 204, 204));
+        jLabel4.setForeground(new java.awt.Color(102, 0, 153));
+        jLabel4.setText("Firma con la clave publica del receptor");
+
+        labelClaveSeleccionada3.setForeground(new java.awt.Color(153, 153, 153));
+        labelClaveSeleccionada3.setText("Clave seleccionada:");
+        labelClaveSeleccionada3.setToolTipText("");
+
+        selectedKeyEncodeLabel.setForeground(new java.awt.Color(153, 153, 255));
+        selectedKeyEncodeLabel.setText("-");
+
         btnEncode.setBackground(new java.awt.Color(102, 102, 255));
         btnEncode.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnEncode.setText("Cifrar y Firmar");
+        btnEncode.setText("Cifrar");
         btnEncode.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                encodeSignBtn(evt);
+                encodeBtn(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnEncode, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelClaveSeleccionada3)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelElegirClave3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSelectKeyEncode, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(selectedKeyEncodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 28, Short.MAX_VALUE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelElegirClave3)
+                    .addComponent(btnSelectKeyEncode))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelClaveSeleccionada3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selectedKeyEncodeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnEncode)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        tabPane.addTab("Cifrar", jPanel1);
+
+        btnSign.setBackground(new java.awt.Color(102, 102, 255));
+        btnSign.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSign.setText("Firmar");
+        btnSign.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                signBtn(evt);
             }
         });
 
@@ -111,6 +203,9 @@ public class Ventana extends javax.swing.JFrame {
             }
         });
 
+        jLabel3.setForeground(new java.awt.Color(102, 0, 153));
+        jLabel3.setText("Firma con la clave privada del emisor");
+
         javax.swing.GroupLayout panelEncodeLayout = new javax.swing.GroupLayout(panelEncode);
         panelEncode.setLayout(panelEncodeLayout);
         panelEncodeLayout.setHorizontalGroup(
@@ -118,35 +213,38 @@ public class Ventana extends javax.swing.JFrame {
             .addGroup(panelEncodeLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelEncodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnEncode, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelClaveSeleccionada)
                     .addGroup(panelEncodeLayout.createSequentialGroup()
-                        .addComponent(labelElegirClave)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSelectKeySign, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(selectedKeySignLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(panelEncodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnSign, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelClaveSeleccionada)
+                            .addGroup(panelEncodeLayout.createSequentialGroup()
+                                .addComponent(labelElegirClave)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSelectKeySign, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(selectedKeySignLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 28, Short.MAX_VALUE))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         panelEncodeLayout.setVerticalGroup(
             panelEncodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelEncodeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelEncodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelEncodeLayout.createSequentialGroup()
-                        .addComponent(labelClaveSeleccionada)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(selectedKeySignLabel))
-                    .addGroup(panelEncodeLayout.createSequentialGroup()
-                        .addGroup(panelEncodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(labelElegirClave)
-                            .addComponent(btnSelectKeySign))
-                        .addGap(44, 44, 44)))
+                .addGroup(panelEncodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelElegirClave)
+                    .addComponent(btnSelectKeySign))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnEncode, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelClaveSeleccionada)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selectedKeySignLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSign)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        tabPane.addTab("Cifrar y Firmar", panelEncode);
+        tabPane.addTab("Firmar", panelEncode);
 
         labelElegirClave1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         labelElegirClave1.setText("Elegir clave");
@@ -169,12 +267,15 @@ public class Ventana extends javax.swing.JFrame {
 
         btnValidate.setBackground(new java.awt.Color(0, 102, 51));
         btnValidate.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnValidate.setText("Validar y Descifrar");
+        btnValidate.setText("Validar");
         btnValidate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                validateDecodeBtn(evt);
+                validateBtn(evt);
             }
         });
+
+        jLabel2.setForeground(new java.awt.Color(102, 0, 153));
+        jLabel2.setText("Valida con la clave publica del emisor");
 
         javax.swing.GroupLayout panelDecodeLayout = new javax.swing.GroupLayout(panelDecode);
         panelDecode.setLayout(panelDecodeLayout);
@@ -182,36 +283,104 @@ public class Ventana extends javax.swing.JFrame {
             panelDecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDecodeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelDecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(labelClaveSeleccionada1)
-                    .addGroup(panelDecodeLayout.createSequentialGroup()
+                .addGroup(panelDecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelClaveSeleccionada1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelDecodeLayout.createSequentialGroup()
                         .addComponent(labelElegirClave1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnSelectKeyValidate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(btnValidate, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(selectedKeyValidateLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(32, Short.MAX_VALUE))
+                    .addComponent(selectedKeyValidateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                    .addComponent(btnValidate, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         panelDecodeLayout.setVerticalGroup(
             panelDecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelDecodeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelDecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelDecodeLayout.createSequentialGroup()
-                        .addComponent(labelClaveSeleccionada1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(selectedKeyValidateLabel))
-                    .addGroup(panelDecodeLayout.createSequentialGroup()
-                        .addGroup(panelDecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnSelectKeyValidate)
-                            .addComponent(labelElegirClave1))
-                        .addGap(44, 44, 44)))
+                .addGroup(panelDecodeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSelectKeyValidate)
+                    .addComponent(labelElegirClave1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnValidate, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelClaveSeleccionada1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selectedKeyValidateLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnValidate)
+                .addGap(20, 20, 20))
+        );
+
+        tabPane.addTab("Validar", panelDecode);
+
+        btnDecode.setBackground(new java.awt.Color(0, 102, 51));
+        btnDecode.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnDecode.setText("Descifrar");
+        btnDecode.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                decodeBtn(evt);
+            }
+        });
+
+        selectedKeyDecodeLabel.setForeground(new java.awt.Color(153, 153, 255));
+        selectedKeyDecodeLabel.setText("-");
+
+        labelClaveSeleccionada2.setForeground(new java.awt.Color(153, 153, 153));
+        labelClaveSeleccionada2.setText("Clave seleccionada:");
+        labelClaveSeleccionada2.setToolTipText("");
+
+        labelElegirClave2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        labelElegirClave2.setText("Elegir clave");
+
+        btnSelectKeyDecode.setBackground(new java.awt.Color(153, 153, 0));
+        btnSelectKeyDecode.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        btnSelectKeyDecode.setText("Clave");
+        btnSelectKeyDecode.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                keyDecodeSelectBtn(evt);
+            }
+        });
+
+        jLabel1.setForeground(new java.awt.Color(102, 0, 153));
+        jLabel1.setText("Descifra con la clave privada del receptor");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(labelClaveSeleccionada2, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(labelElegirClave2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSelectKeyDecode, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnDecode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(selectedKeyDecodeLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelElegirClave2)
+                    .addComponent(btnSelectKeyDecode))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(labelClaveSeleccionada2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selectedKeyDecodeLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnDecode)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        tabPane.addTab("Validar y Descifrar", panelDecode);
+        tabPane.addTab("Descifrar", jPanel2);
 
         title.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         title.setText("Confidencialidad e Identidad");
@@ -277,7 +446,7 @@ public class Ventana extends javax.swing.JFrame {
                     .addComponent(fileMessage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelKeyEncode))
                 .addGap(18, 18, 18)
-                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabPane, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -298,25 +467,18 @@ public class Ventana extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_newKeyBtn
 
-    private void validateDecodeBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_validateDecodeBtn
+    private void validateBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_validateBtn
         PublicKey clavePublica;
-        File fichero = new File(fileName.getText().trim()+ENCODE_EXTENSION);
+        File fichero = new File(fileName.getText().trim() + ENCODE_EXTENSION);
         try {
             //Validate / Verificado
             Signature signature = Signature.getInstance("SHA256withRSA");
             signature.initVerify(KeyManager.getClavePublica(chosen_key_validate));
             signature.update(Files.readAllBytes(fichero.toPath()));
-            
+
             //Segun la validacion
             if (signature.verify(sign)) { //Veridico
-                //Decode / Desencriptar
-                clavePublica = KeyManager.getClavePublica(chosen_key_validate);
-                byte[] mensajeCifrado = Files.readAllBytes(fichero.toPath());
-                byte[] mensajeDescifrado = RSAManager.descifrar(mensajeCifrado, clavePublica);
-                String mensaje = new String(mensajeDescifrado, StandardCharsets.UTF_8);
-                
-                resetData();
-                changeFeedback(textAreaFeedback, "Mensaje verificado y decodificado:\n"+mensaje, Color.black);
+                changeFeedback(textAreaFeedback, "Mensaje verificado.", Color.black);
             } else { //No veridico
                 changeFeedback(textAreaFeedback, """
                                                  Atencion: el fichero no es fiable.
@@ -325,7 +487,7 @@ public class Ventana extends javax.swing.JFrame {
         } catch (Exception ex) {
             exceptionResolver(ex);
         }
-    }//GEN-LAST:event_validateDecodeBtn
+    }//GEN-LAST:event_validateBtn
 
     /*Boton para seleccionar clave de validacion*/
     private void keyValidateSelectBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keyValidateSelectBtn
@@ -358,36 +520,94 @@ public class Ventana extends javax.swing.JFrame {
     }//GEN-LAST:event_keySignSelectBtn
 
     /*Boton de Cifrar y Firmar*/
-    private void encodeSignBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodeSignBtn
-        PrivateKey clavePrivada;
+    private void signBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_signBtn
+
         try {
+
             //Condicion, requiere un mensaje
-            if (!"".equals(fileName.getText().trim())){
-                //Encode / Encriptar
-                FileService.createFile(ROOT_DIR, fileName.getText().trim());
-                File fichero = new File(fileName.getText().trim()+ENCODE_EXTENSION);
-                clavePrivada = KeyManager.getClavePrivada(chosen_key_sign);
-                byte[] mensajeCifrado = RSAManager.cifrar(fileMessage.getText(), clavePrivada);
-                Files.write(fichero.toPath(),mensajeCifrado);
+            if (!"".equals(fileName.getText().trim())) {
+                File fichero = new File(fileName.getText().trim() + ENCODE_EXTENSION);
                 //Sign / Firma
                 Signature signature = Signature.getInstance("SHA256withRSA");
                 signature.initSign(KeyManager.getClavePrivada(chosen_key_sign));
                 signature.update(Files.readAllBytes(fichero.toPath()));
                 sign = signature.sign();
 
-                changeFeedback(textAreaFeedback, "Mensaje codificado y firmado.", Color.black);
+                changeFeedback(textAreaFeedback, "Mensaje firmado.", Color.black);
             } else {
                 changeFeedback(textAreaFeedback, "Escribe un mensaje válido.", ROJO);
             }
-            
+
         } catch (Exception ex) {
             exceptionResolver(ex);
         }
-    }//GEN-LAST:event_encodeSignBtn
+
+    }//GEN-LAST:event_signBtn
+
+    private void decodeBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_decodeBtn
+
+        try {
+            PrivateKey clavePrivada = KeyManager.getClavePrivada(chosen_key_decode);
+            //Decode / Desencriptar
+            File fichero = new File(fileName.getText().trim() + ENCODE_EXTENSION);
+            byte[] mensajeCifrado = Files.readAllBytes(fichero.toPath());
+            byte[] mensajeDescifrado = RSAManager.descifrar(mensajeCifrado, clavePrivada);
+            String mensaje = new String(mensajeDescifrado, StandardCharsets.UTF_8);
+
+            resetData();
+            changeFeedback(textAreaFeedback, "Mensaje descifrado:\n " + mensaje, Color.black);
+
+        } catch (Exception ex) {
+            exceptionResolver(ex);
+        }
+
+    }//GEN-LAST:event_decodeBtn
+
+    private void keyEncodeSelectBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keyEncodeSelectBtn
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setCurrentDirectory(new File(KEY_DIR));
+        int val = fileChooser.showOpenDialog(null);
+
+        if (val == JFileChooser.OPEN_DIALOG) {
+            chosen_key_encode = fileChooser.getSelectedFile().getAbsolutePath();
+            String fileName = fileChooser.getSelectedFile().getName();
+            selectedKeyEncodeLabel.setText(fileName);
+        }
+
+        resetFeedback(textAreaFeedback);
+    }//GEN-LAST:event_keyEncodeSelectBtn
+
+    private void encodeBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_encodeBtn
+        try {
+            PublicKey clavePublica;
+            //Encode / Encriptar
+            FileService.createFile(ROOT_DIR, fileName.getText().trim());
+            File fichero = new File(fileName.getText().trim() + ENCODE_EXTENSION);
+            clavePublica = KeyManager.getClavePublica(chosen_key_encode);
+            byte[] mensajeCifrado = RSAManager.cifrar(fileMessage.getText(), clavePublica);
+            Files.write(fichero.toPath(), mensajeCifrado);
+            changeFeedback(textAreaFeedback, "Mensaje cifrado.", Color.black);
+        } catch (Exception ex) {
+            exceptionResolver(ex);
+        }
+    }//GEN-LAST:event_encodeBtn
+
+    private void keyDecodeSelectBtn(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keyDecodeSelectBtn
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setCurrentDirectory(new File(KEY_DIR));
+        int val = fileChooser.showOpenDialog(null);
+
+        if (val == JFileChooser.OPEN_DIALOG) {
+            chosen_key_decode = fileChooser.getSelectedFile().getAbsolutePath();
+            String fileName = fileChooser.getSelectedFile().getName();
+            selectedKeyDecodeLabel.setText(fileName);
+        }
+
+        resetFeedback(textAreaFeedback);
+    }//GEN-LAST:event_keyDecodeSelectBtn
 
     /*Metodos personalizados*/
-    
-    /*Gestion de labels de feedback*/
+ /*Gestion de labels de feedback*/
     private void changeFeedback(JTextArea textArea, String text, Color color) {
         textArea.setText(text);
         textArea.setForeground(color);
@@ -397,14 +617,18 @@ public class Ventana extends javax.swing.JFrame {
         textArea.setText("");
         textArea.setForeground(Color.black);
     }
-    
+
     /*Reinicia los valores*/
     private void resetData() {
+        chosen_key_encode = ""; //Clave seleccionada para cifrar
         chosen_key_sign = ""; //Clave seleccionada para firmar
         chosen_key_validate = ""; //Clave seleccionada para validar
+        chosen_key_decode = ""; //Clave seleccionada para descifrar
         fileMessage.setText(""); //Campo de mensaje
+        selectedKeyEncodeLabel.setText("-"); //Label que muestra la clave de cifrar
         selectedKeySignLabel.setText("-"); //Label que muestra la clave de firma
         selectedKeyValidateLabel.setText("-"); //Label que muestra la clave de validacion
+        selectedKeyDecodeLabel.setText("-"); //Label que muestra la clave de descifrar
     }
 
     /*Control de errores*/
@@ -423,7 +647,7 @@ public class Ventana extends javax.swing.JFrame {
             case IOException e -> {
                 changeFeedback(textAreaFeedback, "Error, archivo no encontrado.", ROJO);
             }
-            
+
             /*Errores firma*/
             case NoSuchAlgorithmException e -> {
                 changeFeedback(textAreaFeedback, "Error, algoritmo no válido.", ROJO);
@@ -431,8 +655,7 @@ public class Ventana extends javax.swing.JFrame {
             case InvalidKeySpecException e -> {
                 changeFeedback(textAreaFeedback, """
                                                  Error, tipo de clave.
-                                                 Elige la clave opuesta.
-                                                 Firmar necesita una clave privada, Validar necesita una clave publica.""", ROJO);
+                                                 Elige la clave indicada.""", ROJO);
             }
             case InvalidKeyException e -> {
                 changeFeedback(textAreaFeedback, "Error, clave inválida.", ROJO);
@@ -440,13 +663,13 @@ public class Ventana extends javax.swing.JFrame {
             case SignatureException e -> {
                 changeFeedback(textAreaFeedback, "Error al firmar.", ROJO);
             }
-            
+
             default -> {
                 changeFeedback(textAreaFeedback, "Error desconocido: " + ex.getMessage(), ROJO);
             }
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -483,25 +706,43 @@ public class Ventana extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDecode;
     private javax.swing.JButton btnEncode;
     private javax.swing.JButton btnGenerateKey;
+    private javax.swing.JButton btnSelectKeyDecode;
+    private javax.swing.JButton btnSelectKeyEncode;
     private javax.swing.JButton btnSelectKeySign;
     private javax.swing.JButton btnSelectKeyValidate;
+    private javax.swing.JButton btnSign;
     private javax.swing.JButton btnValidate;
     private javax.swing.JTextField fileMessage;
     private javax.swing.JTextField fileName;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelClaveSeleccionada;
     private javax.swing.JLabel labelClaveSeleccionada1;
+    private javax.swing.JLabel labelClaveSeleccionada2;
+    private javax.swing.JLabel labelClaveSeleccionada3;
     private javax.swing.JLabel labelElegirClave;
     private javax.swing.JLabel labelElegirClave1;
+    private javax.swing.JLabel labelElegirClave2;
+    private javax.swing.JLabel labelElegirClave3;
     private javax.swing.JLabel labelKeyEncode;
     private javax.swing.JLabel labelKeyEncode1;
     private javax.swing.JPanel panelDecode;
     private javax.swing.JPanel panelEncode;
+    private javax.swing.JLabel selectedKeyDecodeLabel;
+    private javax.swing.JLabel selectedKeyEncodeLabel;
     private javax.swing.JLabel selectedKeySignLabel;
     private javax.swing.JLabel selectedKeyValidateLabel;
-    private javax.swing.JTabbedPane tabPane;
+    private static javax.swing.JTabbedPane tabPane;
+    private javax.swing.JTabbedPane tabPane1;
     private javax.swing.JTextArea textAreaFeedback;
     private javax.swing.JLabel title;
     // End of variables declaration//GEN-END:variables
